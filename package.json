@@ -1,0 +1,30 @@
+{
+  "name": "hexo-genstubs",
+  "version": "0.1.0",
+  "description": "Generate Hexo stub posts for memory and performance tuning",
+  "bin": "genstubs.js",
+  "scripts": {
+    "clean": "rm -rf source/_posts/*.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leesei/hexo-genstubs.git"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "author": "leesei <leesei@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/leesei/hexo-genstubs/issues"
+  },
+  "homepage": "https://github.com/leesei/hexo-genstubs#readme",
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "chance": "^1.0.0",
+    "lodash.range": "^3.1.2",
+    "progress": "^1.1.8",
+    "yargs": "^4.1.0"
+  }
+}
