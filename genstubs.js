@@ -15,13 +15,11 @@ var Program = require('yargs')
   .option('posts', {
     alias: 'N',
     describe: 'number of posts to generate',
-    // number: true,
-    default: 10000
+    default: 5000
   })
   .option('paragraphs', {
     alias: 'P',
     describe: 'number of paragraphs to generate per post',
-    // number: true,
     default: 100
   })
   .epilogue(
