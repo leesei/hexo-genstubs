@@ -22,6 +22,26 @@ var Program = require('yargs')
     describe: 'number of paragraphs to generate per post',
     default: 100
   })
+  .option('tags', {
+    alias: 't',
+    describe: 'number of tags to be added (from tagPool) per post',
+    default: 0
+  })
+  .option('tag-pool', {
+    alias: 'T',
+    describe: 'size of tagPool',
+    default: 50
+  })
+  .option('cats', {
+    alias: 'c',
+    describe: 'number of categories to be added (from catPool) per post',
+    default: 0
+  })
+  .option('cat-pool', {
+    alias: 'C',
+    describe: 'size of catPool',
+    default: 20
+  })
   .epilogue(
     Chalk.bold('  Author: ') +
     Chalk.underline('leesei@gmail.com') + '       ' +
@@ -32,26 +52,41 @@ var Program = require('yargs')
   .strict()
   .argv;
 
-genStubs();
+genStubs(Program);
 
-function genStubs () {
-  const NUM_POSTS = Program.posts;
-  const PARAGRAPHS_PER_POST = Program.paragraphs;
+function genStubs (opts) {
+  console.log(`Generating ${opts.posts} posts, with ${opts.paragraphs} paragraphs each (${opts.tags} tags, ${opts.cats} categories)`);
 
-  console.log(`Generating ${NUM_POSTS} posts, with ${PARAGRAPHS_PER_POST} paragraphs each`);
+  // init progress bar
   const bar = new ProgressBar(
     '  [:bar]   :current/:total   :percent   Remaining: :etas',
     {
       complete: '=',
       incomplete: ' ',
       width: 30,
-      total: NUM_POSTS
+      total: opts.posts
     }
   );
-  _range(1, NUM_POSTS + 1).map(
+
+  // init pools
+  const catPool = (opts.cats)
+    ? _range(opts.catPool).map(() => chance.word({syllables: 3}))
+    : [];
+  const tagPool = (opts.tags)
+    ? _range(opts.tagPool).map(() => chance.word({syllables: 2}))
+    : [];
+
+  _range(opts.posts).map(
     (N) => {
+      N = N + 1; // 0-based => 1-based
+      const categories = (opts.cats)
+        ? chance.pickset(catPool, opts.cats).map((s) => `- ${s}`).join('\n')
+        : '- ';
+      const tags = (opts.tags)
+        ? chance.pickset(tagPool, opts.tags).map((s) => `- ${s}`).join('\n')
+        : '- ';
       const paragraphs =
-        _range(PARAGRAPHS_PER_POST)
+        _range(opts.paragraphs)
          .map((j) => chance.paragraph())
          .join('\n\n');
 
@@ -61,8 +96,11 @@ function genStubs () {
 `\
 ---
 title: Post ${N}
-date: 2016-02-21
+date: 1970-01-01
+categories:
+${categories}
 tags:
+${tags}
 ---
 
 ${paragraphs}
