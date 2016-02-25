@@ -69,22 +69,14 @@ function genStubs (opts) {
   );
 
   // init pools
-  const catPool = (opts.cats)
-    ? _range(opts.catPool).map(() => chance.word({syllables: 3}))
-    : [];
-  const tagPool = (opts.tags)
-    ? _range(opts.tagPool).map(() => chance.word({syllables: 2}))
-    : [];
+  const catPool = _range(opts.catPool).map(() => chance.word({syllables: 3}));
+  const tagPool = _range(opts.tagPool).map(() => chance.word({syllables: 2}));
 
   _range(opts.posts).map(
     (N) => {
       N = N + 1; // 0-based => 1-based
-      const categories = (opts.cats)
-        ? chance.pickset(catPool, opts.cats).map((s) => `- ${s}`).join('\n')
-        : '- ';
-      const tags = (opts.tags)
-        ? chance.pickset(tagPool, opts.tags).map((s) => `- ${s}`).join('\n')
-        : '- ';
+      const categories = chance.pickset(catPool, opts.cats).map((s) => `- ${s}`).join('\n');
+      const tags = chance.pickset(tagPool, opts.tags).map((s) => `- ${s}`).join('\n');
       const paragraphs =
         _range(opts.paragraphs)
          .map((j) => chance.paragraph())
